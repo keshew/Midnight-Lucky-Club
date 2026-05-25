@@ -1446,7 +1446,7 @@ private struct OnboardingPageView: View {
     }
 }
 
-private struct ClubLoadingView: View {
+struct ClubLoadingView: View {
     @State private var progress = 0.0
 
     var body: some View {
@@ -2033,7 +2033,7 @@ private struct BannerView: View {
     }
 }
 
-private struct MidnightGradientBackground: View {
+struct MidnightGradientBackground: View {
     var body: some View {
         ZStack {
             LinearGradient(colors: [Theme.bgBlack, Theme.bgNavy, Theme.bgViolet], startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -2652,7 +2652,7 @@ private struct BannerMessage: Identifiable {
     let style: BannerStyle
 }
 
-private enum Theme {
+enum Theme {
     static let bgBlack = Color(hex: "#02030A")
     static let bgNavy = Color(hex: "#070B18")
     static let bgViolet = Color(hex: "#130A2A")
