@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		867F01D42FDAAF2C002D3421 /* AdjustSdk in Frameworks */ = {isa = PBXBuildFile; productRef = 867F01D32FDAAF2C002D3421 /* AdjustSdk */; };
+		867F01D62FDAAF2C002D3421 /* AdjustWebBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 867F01D52FDAAF2C002D3421 /* AdjustWebBridge */; };
 		86E7A0012FD0000100853555 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 86E7A0032FD0000100853555 /* FirebaseCore */; };
 		86E7A0022FD0000100853555 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 86E7A0042FD0000100853555 /* FirebaseMessaging */; };
 /* End PBXBuildFile section */
@@ -28,6 +30,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				867F01D42FDAAF2C002D3421 /* AdjustSdk in Frameworks */,
+				867F01D62FDAAF2C002D3421 /* AdjustWebBridge in Frameworks */,
 				86E7A0012FD0000100853555 /* FirebaseCore in Frameworks */,
 				86E7A0022FD0000100853555 /* FirebaseMessaging in Frameworks */,
 			);
@@ -74,6 +78,8 @@
 			packageProductDependencies = (
 				86E7A0032FD0000100853555 /* FirebaseCore */,
 				86E7A0042FD0000100853555 /* FirebaseMessaging */,
+				867F01D32FDAAF2C002D3421 /* AdjustSdk */,
+				867F01D52FDAAF2C002D3421 /* AdjustWebBridge */,
 			);
 			productName = "Midnight Lucky Club";
 			productReference = 861A89A42FB479F700E8FAA1 /* Midnight Lucky Club.app */;
@@ -105,6 +111,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				86CEDC592FC1D6B600853555 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				867F01D22FDAAF2C002D3421 /* XCRemoteSwiftPackageReference "ios_sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 861A89A52FB479F700E8FAA1 /* Products */;
@@ -268,6 +275,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Midnight-Lucky-Club-Info.plist";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier helps personalize app experience and measure app performance.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -278,7 +286,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.app.MidnightLuckyClub;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -303,6 +311,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Midnight-Lucky-Club-Info.plist";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier helps personalize app experience and measure app performance.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -313,7 +322,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.app.MidnightLuckyClub;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -350,6 +359,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		867F01D22FDAAF2C002D3421 /* XCRemoteSwiftPackageReference "ios_sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adjust/ios_sdk";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		86CEDC592FC1D6B600853555 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -361,6 +378,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		867F01D32FDAAF2C002D3421 /* AdjustSdk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 867F01D22FDAAF2C002D3421 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = AdjustSdk;
+		};
+		867F01D52FDAAF2C002D3421 /* AdjustWebBridge */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 867F01D22FDAAF2C002D3421 /* XCRemoteSwiftPackageReference "ios_sdk" */;
+			productName = AdjustWebBridge;
+		};
 		86E7A0032FD0000100853555 /* FirebaseCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 86CEDC592FC1D6B600853555 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

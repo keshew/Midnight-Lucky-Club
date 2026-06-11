@@ -1,14 +1,42 @@
+import AdjustSdk
+import AppTrackingTransparency
 import FirebaseCore
 import FirebaseMessaging
 import Foundation
 import UIKit
 import UserNotifications
 
+private let adjustAppToken = "zjji19pz13pc"
+private let adjustEnvironment = ADJEnvironmentProduction
+
+final class AdjustAttributionHandler: NSObject, AdjustDelegate {
+    func adjustAttributionChanged(_ attribution: ADJAttribution?) {
+        guard let attribution else { return }
+
+        if #available(iOS 14, *),
+           ATTrackingManager.trackingAuthorizationStatus == .notDetermined {
+            return
+        }
+
+        guard let jsonResponse = attribution.jsonResponse,
+              let data = try? JSONSerialization.data(withJSONObject: jsonResponse, options: []),
+              let jsonString = String(data: data, encoding: .utf8) else {
+            UserDefaults.standard.removeObject(forKey: "lastAdjustAttribution")
+            print("Adjust attribution is empty")
+            return
+        }
+
+        UserDefaults.standard.set(jsonString, forKey: "lastAdjustAttribution")
+        print("Adjust attribution saved:", jsonString)
+    }
+}
+
 final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
     static var orientationLock = UIInterfaceOrientationMask.allButUpsideDown
     private static let pushDedupQueue = DispatchQueue(label: "velvet-fortune-arcade.push.dedup")
     private static var lastPushDispatchSignature: String = ""
     private static var lastPushDispatchAt: Date = .distantPast
+    private let adjustAttributionHandler = AdjustAttributionHandler()
 
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         AppDelegate.orientationLock
@@ -24,16 +52,12 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
 
         Messaging.messaging().delegate = self
         Messaging.messaging().isAutoInitEnabled = true
-        Messaging.messaging().token { token, error in
-            if error != nil {
-                return
-            }
-            _ = token?.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
 
-        let authorizationOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-        UNUserNotificationCenter.current().requestAuthorization(options: authorizationOptions) { _, _ in }
-        application.registerForRemoteNotifications()
+        let adjustConfig = ADJConfig(appToken: adjustAppToken, environment: adjustEnvironment)
+        adjustConfig?.delegate = adjustAttributionHandler
+        Adjust.initSdk(adjustConfig)
+        print("Adjust SDK init requested with token:", adjustAppToken)
+
 
         if let userInfo = launchOptions?[.remoteNotification] as? [AnyHashable: Any] {
             Messaging.messaging().appDidReceiveMessage(userInfo)
@@ -51,10 +75,11 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         UserDefaults.standard.set(apnsToken, forKey: "apnsToken")
 
         Messaging.messaging().token { token, error in
-            if error != nil {
+            if let error {
+                print("FCM token fetch after APNS error:", error.localizedDescription)
                 return
             }
-            _ = token?.trimmingCharacters(in: .whitespacesAndNewlines)
+            self.saveAndPublishFCMToken(token, source: "didRegisterForRemoteNotifications")
         }
     }
 
@@ -102,6 +127,7 @@ private extension AppDelegate {
         let normalizedToken = token?.trimmingCharacters(in: .whitespacesAndNewlines)
         if let normalizedToken, !normalizedToken.isEmpty {
             UserDefaults.standard.set(normalizedToken, forKey: "fcmToken")
+            print("FCM token saved from \(source):", normalizedToken)
             NotificationCenter.default.post(
                 Notification(name: NSNotification.Name("tokenReceivedPublisher"), object: nil)
             )
