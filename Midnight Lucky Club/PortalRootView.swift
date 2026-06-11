@@ -21,7 +21,7 @@ private enum FlowFallback {
 private final class FlowBootstrapViewModel: ObservableObject {
     @Published var phase: FlowPhase = .loading
 
-    private let bootstrapClientUUID = "98e6e98f-2213-478b-a34e-6945675265a6"
+    private let generatedClientUUIDKey = "generatedClientUUID"
     private let bootstrapEndpoint = "https://midnightcluber.cyou/app.php"
     private let userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1"
     private let referrer = "utm_source=appstore&utm_medium=organic"
@@ -177,7 +177,7 @@ private final class FlowBootstrapViewModel: ObservableObject {
     private func configureControlsLink() async {
         var userID = UserDefaults.standard.string(forKey: "userId") ?? ""
         if userID.isEmpty {
-            userID = UserDefaults.standard.string(forKey: "workingClientUUID") ?? bootstrapClientUUID
+            userID = UserDefaults.standard.string(forKey: "workingClientUUID") ?? generatedClientUUID()
             if userID.isEmpty {
                 userID = UUID().uuidString
             }
@@ -318,7 +318,7 @@ private final class FlowBootstrapViewModel: ObservableObject {
 
         appendIfValid(UserDefaults.standard.string(forKey: "userId"))
         appendIfValid(UserDefaults.standard.string(forKey: "workingClientUUID"))
-        appendIfValid(bootstrapClientUUID)
+        appendIfValid(generatedClientUUID())
 
         return values.isEmpty ? [UUID().uuidString] : values
     }
@@ -330,12 +330,24 @@ private final class FlowBootstrapViewModel: ObservableObject {
         let fromUser = UserDefaults.standard.string(forKey: "userId") ?? ""
         if !fromUser.isEmpty { return fromUser }
 
-        return bootstrapClientUUID
+        return generatedClientUUID()
     }
 
     private func rememberWorkingClientUUID(_ value: String) {
         UserDefaults.standard.set(value, forKey: "workingClientUUID")
         UserDefaults.standard.set(value, forKey: "userId")
+    }
+
+    private func generatedClientUUID() -> String {
+        let stored = (UserDefaults.standard.string(forKey: generatedClientUUIDKey) ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if isValidUUID(stored) {
+            return stored
+        }
+
+        let value = UUID().uuidString
+        UserDefaults.standard.set(value, forKey: generatedClientUUIDKey)
+        return value
     }
 
     private func normalizeURLString(_ raw: String?) -> String? {
